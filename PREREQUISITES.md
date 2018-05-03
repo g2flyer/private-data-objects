@@ -103,7 +103,7 @@ If the above succeeds, define/extend the `PKG_CONFIG_PATH` environment variable 
 ```
 export PKG_CONFIG_PATH="$(pwd)/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 ```
-You might also want to extend `LD_LIBRARY_PATH`, e.g., as
+If you installed in a standard location (e.g., default /usr/local/lib) you might have to call 'ldconfig'; if in a non-standard location you might have to extend LD_LIBRARY_PATH, e.g., as
 ```
 export LD_LIBRARY_PATH="$(pwd)/install/lib/${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 ```
