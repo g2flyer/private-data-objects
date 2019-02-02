@@ -197,12 +197,12 @@ def verify_secp256k1_signature(message, signature_str, public_key_str, message_d
 def make_ccl_transaction_hash_input(payload, contract_code_hash, pdo_contract_creator_pem_key):
     update = payload.state_update
     hash_input = bytes(payload.channel_id, "UTF-8", "ignore") +\
-                 bytes(update.contract_id, "UTF-8", "ignore") +\
-                 bytes(pdo_contract_creator_pem_key, "UTF-8", "ignore") + \
-                 base64.b64decode(contract_code_hash) + \
-                 base64.b64decode(update.message_hash) + \
-                 base64.b64decode(update.current_state_hash) + \
-                 base64.b64decode(update.previous_state_hash)
+        bytes(update.contract_id, "UTF-8", "ignore") +\
+        bytes(pdo_contract_creator_pem_key, "UTF-8", "ignore") + \
+        base64.b64decode(contract_code_hash) + \
+        base64.b64decode(update.message_hash) + \
+        base64.b64decode(update.current_state_hash) + \
+        base64.b64decode(update.previous_state_hash)
 
     for d in update.dependency_list:
         hash_input += bytes(d.contract_id, "UTF-8", "ignore") + bytes(d.state_hash, "UTF-8", "ignore")
@@ -228,12 +228,12 @@ def verify_ccl_transaction_signature(payload, contract):
 
 def make_ccl_transaction_pdo_hash_input(payload, contract):
     hash_input = bytes(payload.contract_enclave_id, "UTF-8", "ignore") + \
-                 base64.b64decode(payload.contract_enclave_signature) + \
-                 make_ccl_transaction_hash_input(
-                     payload,
-                     contract.contract_code_hash,
-                     contract.pdo_contract_creator_pem_key
-                 )
+        base64.b64decode(payload.contract_enclave_signature) + \
+        make_ccl_transaction_hash_input(
+        payload,
+        contract.contract_code_hash,
+        contract.pdo_contract_creator_pem_key
+    )
 
     d = hashlib.sha256(hash_input).hexdigest()
     return hash_input
@@ -413,6 +413,13 @@ def verify_enclave_registration_info(connect,
     if verification_report is None:
         raise ValueError('Verification report is missing from proof data')
 
+    # TODO: extract (IAS) CA certificates from proof-data and verify them instead of
+    # storing the (hard to retrieve and more dynamic) IAS signing cert in the ledger.
+    # (obviously also requires change in ledger to contain CA cert/key and in
+    # sawtooth/transaction_processor/enclave_registry_handler.py to retrieve it.
+    # See common/crypto/verify_ias_report/verify-report.cpp:verify_ias_certificate_chain
+    # for equivalent function in C.
+
     signature = proof_data_dict.get('signature')
     if signature is None:
         raise ValueError('Signature is missing from proof data')
@@ -506,7 +513,7 @@ def verify_enclave_registration_info(connect,
             raise \
                 ValueError(
                     'Verification report does not contain a PSE manifest '
-                'hash')
+                    'hash')
     else:
         pse_manifest_hash = ""
 
@@ -579,7 +586,7 @@ def verify_enclave_registration_info(connect,
     expected_report_data = \
         hash_value + \
         (b'\x00' *
-        (SgxReportData.STRUCT_SIZE - len(hash_value)))
+         (SgxReportData.STRUCT_SIZE - len(hash_value)))
 
     if sgx_quote.report_body.report_data.d != expected_report_data:
         raise \

@@ -29,6 +29,21 @@ class SgxAttributes(SgxStruct):
 
     See: https://01.org/sites/default/files/documentation/
                 intel_sgx_sdk_developer_reference_for_linux_os_pdf.pdf
+    or, for more details, the SDM: 37.7.1 ATTRIBUTES, 
+           - ATTRIBUTES (16)
+             - INIT 		0 This bit indicates if the enclave has been
+                                      initialized by EINIT. It must be cleared when loaded as
+                                      part of ECREATE. For EREPORT instruction,
+                                      TARGET_INFO.ATTRIBUTES[ENIT] must always be 1 to match the
+                                      state after EINIT has initialized the enclave. 
+             - DEBUG		1 If 1, the enclave permit debugger to read
+                                      and write enclave data using EDBGRD and EDBGWR. 
+             - MODE64BIT 	2 Enclave runs in 64-bit mode.
+             - RESERVED 	3 Must be Zero.
+             - PROVISIONKEY	4 Provisioning Key is available from EGETKEY.
+             - EINITTOKENKEY	5 EINIT token key is available from EGETKEY.
+             - RESERVED		63:6 [6 seems reserved for (CET)]
+             - XFRM 		127:64 XSAVE Feature Request Mask. See Section 42.7.
     """
 
     STRUCT_SIZE = 16
