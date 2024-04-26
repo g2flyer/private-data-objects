@@ -49,6 +49,12 @@ run_services_dev : build_base build_services_base build_services
 	$(DOCKER_COMMAND) run $(DOCKER_DEV_ARGS) --name services_container_dev \
 		-P pdo_services:$(PDO_VERSION) -c "$(DOCKER_DEV_CMD)"
 
+run_services_sgx_dev : build_base build_services_base build_services_sgx
+	$(DOCKER_COMMAND) run $(DOCKER_DEV_ARGS) --name services_container_sgx_dev \
+                --volume=/var/run/aesmd:/var/run/aesmd \
+                --device=$(SGX_DEVICE_PATH):$(SGX_DEVICE_PATH) \
+		-P pdo_services_sgx:$(PDO_VERSION) -c "$(DOCKER_DEV_CMD)"
+
 run_client_dev : build_base build_client
 	$(DOCKER_COMMAND) run $(DOCKER_CLIENT_DEV_ARGS) $(DOCKER_DEV_ARGS) --name client_container_dev pdo_client:$(PDO_VERSION) \
 		-c "$(DOCKER_DEV_CMD)"
